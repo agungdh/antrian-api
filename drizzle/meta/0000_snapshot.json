@@ -1,5 +1,5 @@
 {
-  "id": "503b8f66-e0b1-42e1-ac2d-5d03f49f27a8",
+  "id": "a43824b1-3d6d-4c0a-9a4a-75491997680e",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -50,8 +50,25 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "uuid",
+          "type": "bigint",
           "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "tickets_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": false,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
@@ -108,6 +125,21 @@
         }
       },
       "indexes": {
+        "tickets_uuid_hash_idx": {
+          "name": "tickets_uuid_hash_idx",
+          "columns": [
+            {
+              "expression": "uuid",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "hash",
+          "with": {}
+        },
         "tickets_biz_loket_number_uniq": {
           "name": "tickets_biz_loket_number_uniq",
           "columns": [

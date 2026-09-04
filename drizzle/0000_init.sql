@@ -7,7 +7,8 @@ CREATE TABLE "daily_counters" (
 );
 --> statement-breakpoint
 CREATE TABLE "tickets" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"id" bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "tickets_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1),
+	"uuid" uuid DEFAULT gen_random_uuid() NOT NULL,
 	"biz_date" date NOT NULL,
 	"loket" smallint NOT NULL,
 	"number" integer NOT NULL,
@@ -18,6 +19,7 @@ CREATE TABLE "tickets" (
 	"finished_at" timestamp with time zone
 );
 --> statement-breakpoint
+CREATE INDEX "tickets_uuid_hash_idx" ON "tickets" USING hash ("uuid");--> statement-breakpoint
 CREATE UNIQUE INDEX "tickets_biz_loket_number_uniq" ON "tickets" USING btree ("biz_date","loket","number");--> statement-breakpoint
 CREATE UNIQUE INDEX "tickets_biz_loket_code_uniq" ON "tickets" USING btree ("biz_date","loket","code");--> statement-breakpoint
 CREATE INDEX "tickets_biz_loket_status_number_idx" ON "tickets" USING btree ("biz_date","loket","status","number");
