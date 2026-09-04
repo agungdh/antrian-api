@@ -1,11 +1,11 @@
 import {
+  bigint,
   date,
   index,
   integer,
   pgEnum,
   pgTable,
   primaryKey,
-  serial,
   smallint,
   text,
   timestamp,
@@ -25,8 +25,10 @@ export type TicketStatus = (typeof ticketStatus.enumValues)[number];
 export const tickets = pgTable(
   "tickets",
   {
-    // Internal integer PK — tidak pernah di-expose ke FE.
-    id: serial("id").primaryKey(),
+    // Internal bigint PK (GENERATED ALWAYS AS IDENTITY) — tidak pernah di-expose ke FE.
+    id: bigint("id", { mode: "number" })
+      .generatedAlwaysAsIdentity()
+      .primaryKey(),
     // Public identifier untuk FE. Hash index non-unique (sengaja tidak unique).
     uuid: uuid("uuid").defaultRandom().notNull(),
     // Tanggal bisnis (Asia/Jakarta) — diisi aplikasi dari createdAt.
