@@ -38,5 +38,8 @@ yarn-error.log*
 **/*.tar.gz
 **/*.tgz
 **/*.log
+# FE static build (di-copy pas CICD, jangan di-commit)
+/public/*
+!/public/.gitkeep
 package-lock.json
 **/*.bun
