@@ -14,15 +14,15 @@ export type TicketPublic = {
   number: number;
   code: string;
   status: string;
-  createdAt: string;
-  calledAt: string | null;
-  finishedAt: string | null;
+  created_at: string;
+  called_at: string | null;
+  finished_at: string | null;
 };
 
 export type LoketSnapshot = {
   current: TicketPublic | null;
   waiting: TicketPublic[];
-  waitingCount: number;
+  waiting_count: number;
 };
 
 export type QueueSnapshot = {
@@ -38,14 +38,14 @@ function toPublic(t: Ticket): TicketPublic {
     number: t.number,
     code: t.code,
     status: t.status,
-    createdAt: t.createdAt.toISOString(),
-    calledAt: t.calledAt ? t.calledAt.toISOString() : null,
-    finishedAt: t.finishedAt ? t.finishedAt.toISOString() : null,
+    created_at: t.createdAt.toISOString(),
+    called_at: t.calledAt ? t.calledAt.toISOString() : null,
+    finished_at: t.finishedAt ? t.finishedAt.toISOString() : null,
   };
 }
 
 function emptyLoket(): LoketSnapshot {
-  return { current: null, waiting: [], waitingCount: 0 };
+  return { current: null, waiting: [], waiting_count: 0 };
 }
 
 /** Ambil nomor baru untuk loket. Atomik via daily_counters, max 1000/hari/loket. */
@@ -103,8 +103,8 @@ export async function getSnapshot(bizDate: string = todayBizDate()): Promise<Que
       slot.waiting.push(toPublic(r));
     }
   }
-  loket1.waitingCount = loket1.waiting.length;
-  loket2.waitingCount = loket2.waiting.length;
+  loket1.waiting_count = loket1.waiting.length;
+  loket2.waiting_count = loket2.waiting.length;
 
   return { date: bizDate, loket1, loket2 };
 }

@@ -79,7 +79,7 @@ export const queueRoutes = new Elysia({ prefix: "/api" })
     return { finished, current };
   })
 
-  // Admin: panggil ulang (FE bunyi lagi, calledAt di-refresh)
+  // Admin: panggil ulang (FE bunyi lagi, called_at di-refresh)
   .post("/loket/:id/recall", async ({ params, set }) => {
     const loket = parseLoketParam(params.id);
     const { current, snapshot } = await recallCurrent(loket);
