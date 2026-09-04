@@ -18,10 +18,7 @@ init-minio:
 	docker compose exec -T minio mcli ls $(MINIO_ALIAS)/
 
 recreate-postgres:
-	docker compose stop postgres
-	docker compose rm -f postgres
-	VOLUME=$$(docker volume ls -q | grep '_postgres_data$$' || true); \
-	if [ -n "$$VOLUME" ]; then docker volume rm -f $$VOLUME; fi
+	docker compose down postgres -v
 	docker compose up -d postgres
 	@echo "Postgres recreated. Jangan lupa: make db-migrate"
 
