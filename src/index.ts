@@ -1,7 +1,16 @@
+import { cors } from "@elysiajs/cors";
 import { Elysia } from "elysia";
 import { logger } from "./logger";
+import { queueRoutes } from "./routes/queue";
+import { streamRoutes } from "./routes/stream";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = new Elysia()
+  .use(cors())
+  .get("/", () => ({ service: "antrian-api", status: "ok" }))
+  .get("/health", () => ({ status: "ok" }))
+  .use(queueRoutes)
+  .use(streamRoutes)
+  .listen(3000);
 
 logger.info(
   {
