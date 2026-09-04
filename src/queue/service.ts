@@ -9,7 +9,7 @@ import {
 } from "../lib/date";
 
 export type TicketPublic = {
-  id: string;
+  uuid: string;
   loket: number;
   number: number;
   code: string;
@@ -33,7 +33,7 @@ export type QueueSnapshot = {
 
 function toPublic(t: Ticket): TicketPublic {
   return {
-    id: t.id,
+    uuid: t.uuid,
     loket: t.loket,
     number: t.number,
     code: t.code,
@@ -80,7 +80,7 @@ export async function takeTicket(loket: number): Promise<{
 
   const snapshot = await getSnapshot();
   const waiting = snapshot[loket === 1 ? "loket1" : "loket2"].waiting;
-  const position = waiting.findIndex((t) => t.id === ticket.id) + 1;
+  const position = waiting.findIndex((t) => t.uuid === ticket.uuid) + 1;
   return { ticket: toPublic(ticket), position, snapshot };
 }
 

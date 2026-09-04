@@ -5,6 +5,7 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
+  serial,
   smallint,
   text,
   timestamp,
@@ -24,7 +25,10 @@ export type TicketStatus = (typeof ticketStatus.enumValues)[number];
 export const tickets = pgTable(
   "tickets",
   {
-    id: uuid("id").defaultRandom().primaryKey(),
+    // Internal integer PK — tidak pernah di-expose ke FE.
+    id: serial("id").primaryKey(),
+    // Public identifier untuk FE. Hash index non-unique (sengaja tidak unique).
+    uuid: uuid("uuid").defaultRandom().notNull(),
     // Tanggal bisnis (Asia/Jakarta) — diisi aplikasi dari createdAt.
     // Dipakai untuk counter harian, filter display, dan arsip. Tidak pernah di-delete.
     bizDate: date("biz_date").notNull(),
@@ -43,6 +47,7 @@ export const tickets = pgTable(
     }),
   },
   (t) => [
+    index("tickets_uuid_hash_idx").using("hash", t.uuid),
     uniqueIndex("tickets_biz_loket_number_uniq").on(t.bizDate, t.loket, t.number),
     uniqueIndex("tickets_biz_loket_code_uniq").on(t.bizDate, t.loket, t.code),
     index("tickets_biz_loket_status_number_idx").on(
